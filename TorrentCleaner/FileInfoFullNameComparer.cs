@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,16 @@ namespace TorrentCleaner
 
         public bool Equals(FileInfo x, FileInfo y)
         {
+            if (x == y) return true;
+
+            if (x == null || y == null) return false;
+
             return string.Equals(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetHashCode(FileInfo obj)
         {
-            return obj.FullName.GetHashCode();
+            return obj.FullName.ToLowerInvariant().GetHashCode();
         }
     }
 }
