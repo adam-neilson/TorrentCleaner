@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace TorrentCleaner
 {
-    public class FileInfoFullNameComparer : IEqualityComparer<FileInfo>
+    public class FileSystemInfoFullNameComparer : IEqualityComparer<FileSystemInfo>
     {
-        public static readonly FileInfoFullNameComparer Instance = new FileInfoFullNameComparer();
+        public static readonly FileSystemInfoFullNameComparer Instance = new FileSystemInfoFullNameComparer();
 
-        public bool Equals(FileInfo x, FileInfo y)
+        public bool Equals(FileSystemInfo x, FileSystemInfo y)
         {
             if (x == y) return true;
 
@@ -21,7 +21,7 @@ namespace TorrentCleaner
             return string.Equals(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase);
         }
 
-        public int GetHashCode(FileInfo obj)
+        public int GetHashCode(FileSystemInfo obj)
         {
             return obj.FullName.ToLowerInvariant().GetHashCode();
         }

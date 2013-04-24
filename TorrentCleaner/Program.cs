@@ -72,7 +72,7 @@ namespace TorrentCleaner
             // List the files that shouldn't be there.
             var filesInDestinationDirectory = destinationDirectoryInfo.EnumerateFiles("*", SearchOption.AllDirectories);
 
-            var unwantedFiles = filesInDestinationDirectory.Except(filesDefinedByTorrent, FileInfoFullNameComparer.Instance).ToList();
+            var unwantedFiles = filesInDestinationDirectory.Except(filesDefinedByTorrent, FileSystemInfoFullNameComparer.Instance).Cast<FileInfo>().ToList();
 
             foreach (var file in unwantedFiles)
             {
@@ -109,6 +109,46 @@ namespace TorrentCleaner
                 }
 
                 Console.WriteLine("Operation complete.");
+            }
+
+            var directoriesInTorrent = filesDefinedByTorrent.Select(x => x.Directory).Distinct(FileSystemInfoFullNameComparer.Instance);
+            var directoriesInDestination = destinationDirectoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories);
+
+            var unwantedDirectories = directoriesInDestination.Except(directoriesInTorrent, FileSystemInfoFullNameComparer.Instance).Cast<DirectoryInfo>().ToList();
+
+            foreach (var directory in unwantedDirectories)
+            {
+                Console.WriteLine(directory.FullName);
+            }
+
+            Console.WriteLine("{0} unwanted directories", unwantedDirectories.Count);
+
+            if (unwantedDirectories.Any())
+            {
+                Console.WriteLine("Type 'YES' to delete these directories.");
+                var response = Console.ReadLine();
+
+                if (!"yes".Equals(response, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Operation aborted.");
+                    return 0;
+                }
+
+                foreach (var directory in unwantedDirectories)
+                {
+                    if (directory.GetFileSystemInfos("*", SearchOption.AllDirectories).Any())
+                    {
+                        throw new ApplicationException(string.Format("Unexpected files in directory '{0}' that was marked for deletion", directory.FullName));
+                    }
+
+                    Console.Write("Deleting directory '{0}'...", directory.FullName);
+
+                    directory.Delete();
+
+                    Console.WriteLine("Done.");
+                }
+
+                Console.WriteLine("Operation complete");
             }
 
             return 0;

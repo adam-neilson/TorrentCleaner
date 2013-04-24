@@ -17,7 +17,7 @@ namespace TorrentCleaner.Tests
             FileInfo file1 = new FileInfo(@"c:\these\files\are\equal.txt");
             FileInfo file2 = new FileInfo(@"c:\these\files\are\equal.txt");
 
-            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileInfoFullNameComparer.Instance);
+            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileSystemInfoFullNameComparer.Instance);
 
             Assert.IsTrue(result);
         }
@@ -28,7 +28,7 @@ namespace TorrentCleaner.Tests
             FileInfo file1 = new FileInfo(@"c:\these\FILES\are\EQUAL.txt");
             FileInfo file2 = new FileInfo(@"c:\these\files\are\equal.txt");
 
-            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileInfoFullNameComparer.Instance);
+            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileSystemInfoFullNameComparer.Instance);
 
             Assert.IsTrue(result);            
         }
@@ -39,7 +39,7 @@ namespace TorrentCleaner.Tests
             FileInfo file1 = new FileInfo(@"c:\these\files\are\not\equal.txt");
             FileInfo file2 = new FileInfo(@"c:\these\files\are\not\at\all\equal.txt");
 
-            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileInfoFullNameComparer.Instance);
+            var result = new[] { file1 }.SequenceEqual(new[] { file2 }, FileSystemInfoFullNameComparer.Instance);
             
             Assert.IsFalse(result);
         }
@@ -50,7 +50,7 @@ namespace TorrentCleaner.Tests
             FileInfo file1 = new FileInfo(@"c:\these\FILES\are\EQUAL.txt");
             FileInfo file2 = new FileInfo(@"c:\these\files\are\equal.txt");
 
-            Dictionary<FileInfo, string> dictionary = new Dictionary<FileInfo, string>(FileInfoFullNameComparer.Instance);
+            Dictionary<FileInfo, string> dictionary = new Dictionary<FileInfo, string>(FileSystemInfoFullNameComparer.Instance);
 
             dictionary[file1] = "first";
             dictionary[file2] = "second";
