@@ -112,7 +112,7 @@ namespace TorrentCleaner
             }
 
             var directoriesInTorrent = filesDefinedByTorrent.Select(x => x.Directory).Distinct(FileSystemInfoFullNameComparer.Instance);
-            var directoriesInDestination = destinationDirectoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories);
+            IEnumerable<DirectoryInfo> directoriesInDestination = destinationDirectoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories).Where(x => !x.EnumerateDirectories("*", SearchOption.TopDirectoryOnly).Any()).ToList();
 
             var unwantedDirectories = directoriesInDestination.Except(directoriesInTorrent, FileSystemInfoFullNameComparer.Instance).Cast<DirectoryInfo>().ToList();
 
